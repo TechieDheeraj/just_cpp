@@ -31,12 +31,35 @@ class FindDuplicate {
 			
 			sort(arr, arr+size);				// Sort + Scan Approach, Sorted Array First.
 			for( i = 0 ; i < size-1; i++) {		// Checking the adjacent elements to find duplicate.
-				if (arr[i] == arr[i+1])
+			    if (arr[i] == arr[i+1])
 					return arr[i];
 			}
 			return INT_MIN;
 		}
+		int findDuplicate3(int *arr, int size) { // TC: c * n --> O(n)
+           int i;
+           int aux[size] = {0}; // SC: O(n) units because apart from input allocating n bytes.
 
+           for(i = 0;i < size; i++) {
+                if(aux[arr[i]] != 0) {
+                    return arr[i];
+                }
+                aux[arr[i]] = 1; // This will only work in case of range of elements (1 to n-1) 
+           }                     // Otherwise it may go beyond aux array
+           return INT_MIN;
+        }
+        int findDuplicate4(int *arr, int size) { // TC: c * n --> O(n) , SC: O(1) units 
+           int i, tmp;
+
+           for(i = 0; i < size; i++) {
+                tmp = abs(arr[i]);
+                if(arr[tmp] < 0) 
+                    return tmp;
+                arr[tmp] *= -1; // Setting MSB of same array to check duplicate number 
+           }
+           return INT_MIN;
+
+        }
 		void testcase1(int *arr, int size) {
 			int i;
 
@@ -45,6 +68,7 @@ class FindDuplicate {
 			}
 			arr[i] = i;
 		}
+
 		void testcase2(int *arr, int size) {
 			int i;
 			struct timeval curtime;
@@ -54,12 +78,12 @@ class FindDuplicate {
 			srand(curtime.tv_sec % 20 );
 
 			for(i=0; i < size-1; i++) {
-				arr[i] = (rand() % 100) + 5; 
+				arr[i] = (rand() % size); 
 			}
 			arr[i] = i;
 		}
-		void display(int *arr, int size) {
 
+		void display(int *arr, int size) {
 			int i;
 			cout << "arr[";
 			for(i =0; i < size-1; i++)
@@ -88,7 +112,9 @@ int main() {
 	gettimeofday(&start_time, NULL);
 
 	//cout << "Duplicate Element is " << obj.findDuplicate1(arr, obj.size) << endl;
-	cout << "Duplicate Element is " << obj.findDuplicate2(arr, obj.size) << endl;
+	//cout << "Duplicate Element is " << obj.findDuplicate2(arr, obj.size) << endl;
+	//cout << "Duplicate Element is " << obj.findDuplicate3(arr, obj.size) << endl;
+	cout << "Duplicate Element is " << obj.findDuplicate4(arr, obj.size) << endl;
 
 	//obj.display(arr, obj.size);
 
