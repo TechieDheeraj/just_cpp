@@ -97,7 +97,7 @@ class FindDuplicate {
 int main() {
 
     FindDuplicate obj;
-    long time;
+    double elapse_time;
     struct timeval start_time, end_time;
 
     cout << "Enter Size of Array" << endl;
@@ -120,9 +120,10 @@ int main() {
 
     gettimeofday(&end_time, NULL);
 
-    time = end_time.tv_sec - start_time.tv_sec;
-
-    cout << "Time taken is " << time << "." << end_time.tv_usec + start_time.tv_usec << " seconds" << setprecision(5) << endl;
+    elapse_time = (end_time.tv_sec - start_time.tv_sec) * 1000.0;
+    elapse_time += (end_time.tv_usec - start_time.tv_usec) / 1000.0;
+    cout << "Time taken: " << elapse_time << " ms" << endl;
+    //cout << "Time taken is " << time << "." << end_time.tv_usec + start_time.tv_usec << " seconds" << setprecision(5) << endl;
 
     return 0;
 }
