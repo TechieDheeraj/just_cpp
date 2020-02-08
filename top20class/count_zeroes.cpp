@@ -7,6 +7,7 @@
    Array Consists of Zeroes followed by non-zeroes return No. of Zeroes available in the array.
  */
 
+// Divide and Prune Thinking problem
 using namespace std;
 
 class CountZeroes
