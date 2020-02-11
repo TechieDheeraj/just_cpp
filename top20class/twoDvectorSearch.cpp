@@ -1,5 +1,5 @@
 #include<iostream>
-//#include<bool.h>
+#include<vector>
 
 using namespace std;
 
@@ -14,43 +14,36 @@ class TwoDSearch {
 
     public:
         int row, key_element;
-
-        /* This Will not work because -> 
-        
-        VLA ( variable Length array) are not implemented in C++. It is there in GCC (-std c99), Array Size should be Constant if want to use in C++
-
-        WIll Write the same algo with vectors 
-
-        */
        
-        bool twoDSearch(int **arr, int row, int key_element) {
+        bool twoDSearch(vector < vector <int> > &matrix) { // TC: O(n^2), SC: O(1)
             int i, j;
             
             for(i = 0; i < row; i++) {
                 for(j = 0; j < row; j++) {
-                    if(arr[i][j] == key_element) 
+                    if(matrix[i][j] == key_element) 
                         return true;
                 }
             }
             return false;
         }
 
-        void testcase1(int **arr, int row) {
+        void testcase1(vector < vector <int> > &matrix) {
             int i, j, count = 0;
 
             for(i = 0; i < row; i++) {
                 for(j = 0; j < row; j++)
-                    arr[i][j] = ++count;
+                   matrix[i][j] = ++count;
             }
         }
 
-        void display(int **arr, int size) {
+        void display(vector < vector <int> > &matrix) {
             int i, j;
-            cout << "arr";
 
+            cout << "\n"; 
             for(i = 0; i < row; i++) {
                 for(j = 0; j < row; j++)
-                    cout << arr[i][j] << ", ";
+                    cout << matrix[i][j] << " ";
+                cout << "\n";    
             }
         }    
 };
@@ -59,18 +52,20 @@ int main() {
 
     TwoDSearch obj; 
 
-    cout << "Enter No. of Rows Of Matrix";
+    cout << "Enter No. of Rows Of Matrix" << endl;
     cin >> obj.row; // Assuming ROW and COL are same
 
-    int arr[obj.row][obj.row];
+     //vector< vector <int> > matrix; // Creating a 2-D Array(vector) 
+    vector< vector <int> > matrix(obj.row, vector <int> (obj.row)); // Creating a 2-D Array(vector) with obj.row rows and cols
     
     cout << "Enter Key element to Search" << endl;
 
     cin >> obj.key_element;
 
-    obj.testcase1(arr, obj.row);
+    obj.testcase1(matrix);
 
-    cout << obj.twoDSearch(arr, obj.row, obj.key_element) < endl;
+    obj.display(matrix);
+    cout << "Element existence: " << boolalpha << obj.twoDSearch(matrix) << endl;
 
     return 0;
 }
