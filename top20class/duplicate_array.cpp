@@ -116,7 +116,7 @@ int main() {
     //cout << "Duplicate Element is " << obj.findDuplicate1(arr, obj.size) << endl;
     //cout << "Duplicate Element is " << obj.findDuplicate2(arr, obj.size) << endl;
     //cout << "Duplicate Element is " << obj.findDuplicate3(arr, obj.size) << endl;
-    cout << "Duplicate Element is " << obj.findDuplicate4(arr, obj.size) << endl;
+    cout << "Duplicate Element is " << obj.findDuplicate4(arr, obj.size) << endl;    // DON'T NEED TO PASS SIZE AS IT IS CLASS MEMBER VARIABLE, CAN BE ACCESSED INSIDE MEMBER FUNCTION
 
     //obj.display(arr, obj.size);
 
