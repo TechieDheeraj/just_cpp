@@ -10,6 +10,7 @@ int main() {
     for(int i=0; i <5; i++)
         g1.push_back(i);
 
+    cout << "Size of Vector: " << g1.size() << endl;
     for(auto i = g1.begin(); i != g1.end(); i++)
         cout << *i << endl;
 
