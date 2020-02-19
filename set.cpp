@@ -10,6 +10,8 @@ using namespace std;
 
 int main() {
 
+    // Set is Implemented as Balanced binary tree. TC: O(logn)
+
     // Empty Set Container
     set <int> setOfNumbers; // Instead of int Template type could be anything (String, Class, char .. etc)
 
