@@ -64,7 +64,7 @@ class GroupAnagram {
                     }
                 }
             }
-            for (bool k: count) {
+            for (bool k: count) { // Need to cross check on this, If First string has 3 anagram classes then It will count 3 as Anagram But Sould be 1
                 if(k)
                     distinctAnagram++;
             }
@@ -107,6 +107,47 @@ class GroupAnagram {
             return distinctAnagram;
         }
 
+/*
+    Sorting Each string and Storing the Sorted String as Keys in Hash Map.
+    Picking up Given Strings and sorting it checking if the same string is avilable in Hash map or not ?
+    If yes Then Creating Vector of string of same anagram classes.
+    At Last Checking Through HashMap if Size of Vector is Greater than 1, It means that string found anagram and taking it as one distinct anagram class.
+
+    TC: n * mlog(m) + n * mlog(m) + 2 * O(1) + O(n) -> n + 2 * nm * log(m), SC: 2n (copied same vector) 
+*/
+        int groupAnagram3(vector <string> &array) {
+
+            int distinctAnagram = 0;
+            vector <string> dummy;
+            unordered_map<string, vector<string> > hashMap;
+
+            dummy = array;
+
+            for(auto i = dummy.begin(); i != dummy.end(); ++i) {
+                cout << "Given String is " << *i << endl;
+                sort((*i).begin(), (*i).end()); // Sort each string
+                hashMap[*i];
+            }
+            
+            for(auto i = array.begin(); i != array.end(); ++i) {
+                sort((*i).begin(), (*i).end()); // Sort each string
+                if (hashMap.find(*i) != hashMap.end())
+                    hashMap[*i].push_back(*i); // Grouping Same Anagram Classes
+            }
+            cout << "\n";
+
+            for(auto i = hashMap.begin(); i != hashMap.end(); ++i) {
+                cout << "Same Group of " << i->first << " : {";
+                for(auto k: i->second)
+                    cout << " " << k;
+                cout << "}" << endl;
+
+                if((i->second).size() > 1)
+                    distinctAnagram++;
+            }
+            return distinctAnagram;
+        }
+
         void testCase1(vector <string> &array) {
             
             struct timeval cur_time;
@@ -143,7 +184,8 @@ int main() {
     obj.testCase1(array);
 
     //cout << "Distinct Anagram: " << obj.groupAnagram1(array) << endl;
-    cout << "Distinct Anagram: " << obj.groupAnagram2(array) << endl;
+    //cout << "Distinct Anagram: " << obj.groupAnagram2(array) << endl;
+    cout << "Distinct Anagram: " << obj.groupAnagram3(array) << endl;
 
     return 0;
 }
