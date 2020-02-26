@@ -9,13 +9,15 @@ struct node {
 
 class LinkList {
 
-    private:
-        struct node *head; 
+   // private:
+   //     struct node *head; 
     public:
         int size;
+        struct node *head; 
 
         LinkList() { // constructor
             head = new node; // Creating Dummy node
+            head->data = 22;
             head->next = NULL; 
         }
 
@@ -42,9 +44,10 @@ class LinkList {
             struct node *tmp = head;
 
             for(int i = 0; i < size; ++i) {
-                cout << "Address: " << tmp << "->"; // Why It is coming 4 Bytes for 64-bit arch need to see 
+                cout << tmp << "->";
                 tmp = tmp->next;
             }
+            cout << "\n";
         }
 };
 
@@ -57,10 +60,22 @@ class ReverseList {
                 llobj.addNode(i+1);
         }
 
-        void reverseList(LinkList llobj) {
-            
-        }
+        int reverseList1(LinkList llobj) {
+            struct node *current, *tmp, *prev = NULL;;
 
+            if(llobj.head->next == NULL)
+                return -1;
+
+            current = llobj.head->next;
+            while(current->next != NULL) {
+                tmp = current->next;
+                current->next = prev;
+                prev = current;
+                current = tmp;
+            }
+
+            return 0;
+        }
 };
 
 int main() {
@@ -74,7 +89,8 @@ int main() {
 
     obj.testCase1(llobj);
     llobj.displayList();
-    obj.reverseList(llobj);
+    obj.reverseList1(llobj);
+    llobj.displayList();
    
     return 0;
 }
