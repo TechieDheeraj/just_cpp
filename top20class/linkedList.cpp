@@ -1,6 +1,12 @@
 #include<iostream>
+#include<stdio.h>
 
 using namespace std;
+
+/* 
+    Problem Statement:
+        Reverse a Single Linklist
+*/
 
 struct node {
     int data;
@@ -43,6 +49,10 @@ class LinkList {
         void displayList() {
             struct node *tmp = head;
 
+            cout << "Inside Display: " << endl;
+            printf("Addr: %p ->\n", tmp->next);
+            cout << tmp << "->";
+            tmp = tmp->next;
             for(int i = 0; i < size; ++i) {
                 cout << tmp << "->";
                 tmp = tmp->next;
@@ -54,27 +64,28 @@ class LinkList {
 class ReverseList {
 
     public:
-        void testCase1(LinkList llobj) {
+        void testCase1(LinkList& llobj) {
 
+            cout << " llobj: " << &llobj << " Adress of Size" << &(llobj.size) << endl;;
             for(int i = 0; i < llobj.size; ++i)
                 llobj.addNode(i+1);
         }
 
-        int reverseList1(LinkList llobj) {
+        void reverseList1(LinkList& llobj) {
             struct node *current, *tmp, *prev = NULL;;
 
+            cout << " llobj: " << &llobj << endl;;
             if(llobj.head->next == NULL)
-                return -1;
+                cout << "Empty Linklist" << endl; 
 
             current = llobj.head->next;
-            while(current->next != NULL) {
+            while(current != NULL) {
                 tmp = current->next;
                 current->next = prev;
                 prev = current;
                 current = tmp;
             }
 
-            return 0;
         }
 };
 
@@ -84,12 +95,14 @@ int main() {
     ReverseList obj; 
 
     cout << "Enter the number of LinkedList Nodes" << endl;
+    //cout << " llobj: " << &llobj << endl;;
+    cout << " llobj: " << &llobj << " Adress of Size" << &(llobj.size) << endl;;
 
     cin >> llobj.size; 
 
     obj.testCase1(llobj);
     llobj.displayList();
-    obj.reverseList1(llobj);
+    //obj.reverseList1(llobj);
     llobj.displayList();
    
     return 0;
