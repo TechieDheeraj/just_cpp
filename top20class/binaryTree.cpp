@@ -227,6 +227,61 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
 
             return ++count; // Including Root node
         }
+
+        struct BTree *findPredecessor(struct BTree *topmost) {
+            struct BTree *tmp = NULL, *prev = NULL;
+
+            tmp = topmost;
+            cout << "Predecessor is :" << tmp << endl;
+
+            // Inorder Predecessor ( First Left then Right most Node )
+            if(tmp != NULL) {
+                tmp = tmp->left;
+                cout << "tmp is :" << tmp << endl;
+                while(tmp != NULL) { 
+                    prev = tmp;
+                    cout << "Predecessor in func is :" << prev << " Left " << prev->left << " Right " << prev->right << endl;
+                    tmp = tmp->right;
+                }
+            }
+            return prev;
+        }
+/* 
+    Adhoc -> 
+        1. Inorder Predecessor
+        2. Null Links
+*/
+
+        int nodesBinaryT4(struct BTree *topmost) {
+
+            BTree *tmp = NULL;
+            BTree *ptr = NULL;
+            int count = 0;
+
+            tmp = topmost;
+
+            while(tmp != NULL) {
+                cout << "Predecessor at line is :" << tmp << " Left " << tmp->right->left << " Right " << tmp->right << endl;
+                if(tmp->left != NULL) {
+                    ptr = findPredecessor(tmp);   
+                    //cout << "Predecessor is :" << ptr << endl;
+                    ptr->right = tmp;
+                    tmp = tmp->left;
+                }
+
+                if(tmp->left == NULL) { // Bottom Leaf Node 
+                    ++count;
+                    if(tmp->right != NULL) {
+                        tmp = tmp->right;
+                        if(tmp->right != NULL) {
+                            ++count;
+                            tmp = tmp->right;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
 };
 
 int main() {
@@ -242,7 +297,8 @@ int main() {
     // cout << "No. of Nodes: " << obj.nodesBinaryT2() << endl;
     // cout << "No. of Nodes: " << obj.nodesBinaryT12() << endl;
     // cout << "No. of Nodes: " << obj.nodesBinaryT22() << endl;
-    cout << "No. of Nodes: " << obj.nodesBinaryT3(obj.root) << endl;
+    //cout << "No. of Nodes: " << obj.nodesBinaryT3(obj.root) << endl;
+    cout << "No. of Nodes: " << obj.nodesBinaryT4(obj.root) << endl;
 
     return 0;
 }
