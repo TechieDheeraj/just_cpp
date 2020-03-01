@@ -1,5 +1,4 @@
 #include<iostream>
-#include<stdio.h>
 
 using namespace std;
 
@@ -49,11 +48,10 @@ class LinkList {
         void displayList() {
             struct node *tmp = head;
 
-            cout << "Inside Display: " << endl;
-            printf("Addr: %p ->\n", tmp->next);
             cout << tmp << "->";
             tmp = tmp->next;
-            for(int i = 0; i < size; ++i) {
+
+            while(tmp != NULL) {
                 cout << tmp << "->";
                 tmp = tmp->next;
             }
@@ -66,15 +64,17 @@ class ReverseList {
     public:
         void testCase1(LinkList& llobj) {
 
-            cout << " llobj: " << &llobj << " Adress of Size" << &(llobj.size) << endl;;
             for(int i = 0; i < llobj.size; ++i)
                 llobj.addNode(i+1);
         }
 
+/* 
+    Using Three Pointers just reversing the linklist
+    TC: O(n), SC: O(1)
+*/
         void reverseList1(LinkList& llobj) {
             struct node *current, *tmp, *prev = NULL;;
 
-            cout << " llobj: " << &llobj << endl;;
             if(llobj.head->next == NULL)
                 cout << "Empty Linklist" << endl; 
 
@@ -85,7 +85,29 @@ class ReverseList {
                 prev = current;
                 current = tmp;
             }
+            llobj.head->next = prev;
+        }
 
+/*  With Two Pointers instead of Three
+    TC: O(n), SC: O(1)
+*/
+        void reverseList2(LinkList& llobj) {
+            struct node *current, *prev = nullptr;
+
+            current = llobj.head->next;
+
+            while(current != NULL) {
+                current->next =(struct node *)((uintptr_t)current->next ^ (uintptr_t)prev);  // Bit-wise operations not allowed on pointer so converted into uintptr_t
+                prev =(struct node *)((uintptr_t)current->next ^ (uintptr_t)prev); 
+                current->next =(struct node *)((uintptr_t)current->next ^ (uintptr_t)prev); 
+                // Till above steps prev and current->next is swapped
+                // Now need to swap the current and prev 
+
+                current =(struct node *)((uintptr_t)current ^ (uintptr_t)prev);  // Bit-wise operations not allowed on pointer so converted into uintptr_t
+                prev =(struct node *)((uintptr_t)current ^ (uintptr_t)prev); 
+                current =(struct node *)((uintptr_t)current ^ (uintptr_t)prev); 
+            }
+            llobj.head->next = prev;
         }
 };
 
@@ -95,14 +117,13 @@ int main() {
     ReverseList obj; 
 
     cout << "Enter the number of LinkedList Nodes" << endl;
-    //cout << " llobj: " << &llobj << endl;;
-    cout << " llobj: " << &llobj << " Adress of Size" << &(llobj.size) << endl;;
 
     cin >> llobj.size; 
 
     obj.testCase1(llobj);
     llobj.displayList();
-    //obj.reverseList1(llobj);
+   // obj.reverseList1(llobj);
+    obj.reverseList2(llobj);
     llobj.displayList();
    
     return 0;
