@@ -235,7 +235,6 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
             cout << "Predecessor is :" << tmp << endl;
 
             // Inorder Predecessor ( First Left then Right most Node )
-            if(tmp != NULL) {
                 tmp = tmp->left;
                 cout << "tmp is :" << tmp << endl;
                 while(tmp != NULL) { 
@@ -243,7 +242,6 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
                     cout << "Predecessor in func is :" << prev << " Left " << prev->left << " Right " << prev->right << endl;
                     tmp = tmp->right;
                 }
-            }
             return prev;
         }
 /* 
@@ -269,17 +267,17 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
                     tmp = tmp->left;
                 }
 
-                if(tmp->left == NULL) { // Bottom Leaf Node 
-                    ++count;
-                    if(tmp->right != NULL) {
+                else if(tmp->right != NULL) { // Bottom Leaf Node 
+						++count;
                         tmp = tmp->right;
+				}
+				/*
                         if(tmp->right != NULL) {
                             ++count;
                             tmp = tmp->right;
                         }
-                    }
-                }
-            }
+				*/
+			}
             return count;
         }
 };
