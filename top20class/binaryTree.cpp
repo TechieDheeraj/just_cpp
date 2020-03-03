@@ -232,16 +232,17 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
             struct BTree *tmp = NULL, *prev = NULL;
 
             tmp = topmost;
-            cout << "Predecessor is :" << tmp << endl;
 
             // Inorder Predecessor ( First Left then Right most Node )
                 tmp = tmp->left;
-                cout << "tmp is :" << tmp << endl;
                 while(tmp != NULL) { 
                     prev = tmp;
-                    cout << "Predecessor in func is :" << prev << " Left " << prev->left << " Right " << prev->right << endl;
                     tmp = tmp->right;
+                    if(topmost == tmp) {
+                        break;
+                    }    
                 }
+              //  cout << "Predecessor in func is :" << prev << " Left " << prev->left << " Right " << prev->right << endl;
             return prev;
         }
 /* 
@@ -249,6 +250,8 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
         1. Inorder Predecessor
         2. Null Links
 */
+
+// TC: <= 4n -> O(n) , SC: O(1)
 
         int nodesBinaryT4(struct BTree *topmost) {
 
@@ -259,24 +262,26 @@ TC: 3 * n == O(n), SC: (n * Stack Size) == O(n)
             tmp = topmost;
 
             while(tmp != NULL) {
-                cout << "Predecessor at line is :" << tmp << " Left " << tmp->right->left << " Right " << tmp->right << endl;
+             //   cout << "current node :" << tmp << " Left " << tmp->left << " Right " << tmp->right << " count " << count << endl;
+                if(tmp->left == NULL && tmp->right == NULL)
+                    return ++count;
                 if(tmp->left != NULL) {
                     ptr = findPredecessor(tmp);   
-                    //cout << "Predecessor is :" << ptr << endl;
-                    ptr->right = tmp;
-                    tmp = tmp->left;
+                    if(ptr->right != NULL) { // Returning to same node after previous visit
+                        ptr->right = NULL;
+                        ++count;
+                        tmp = tmp->right; // It means Traversed the whole left side of Subtree 
+                    }
+                    else {
+                        ptr->right = tmp;
+                        tmp = tmp->left;
+                    }
                 }
-
                 else if(tmp->right != NULL) { // Bottom Leaf Node 
-						++count;
                         tmp = tmp->right;
+                   //     cout << "Moved Right " << endl;
+						++count;
 				}
-				/*
-                        if(tmp->right != NULL) {
-                            ++count;
-                            tmp = tmp->right;
-                        }
-				*/
 			}
             return count;
         }
