@@ -1,4 +1,5 @@
 #include<iostream>
+#include<vector>
 
 using namespace std;
 
@@ -20,11 +21,95 @@ Problem Statement:
 There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
 */
 
+/*
+    Using Recursion:
+
+    Test this code in LeetCode Problem
+
+    TC: O(n), SC: O(n) --> n * (stack size)
+*/
+
+struct QueueNode {
+    struct BTree *root;
+    bool isLeft;
+};
+
+class TreeLeftLeafSum {
+   
+    public:
+
+        int treeLeftLeafSum1(struct BTree *root, bool isLeft) {
+
+            int sum = 0;
+
+            if(root == NULL) return 0;
+            
+            if(root->left == NULL && root->right == NULL) {
+                if(isLeft)
+                    return root->data;
+                else
+                    return 0;
+            }
+
+            sum+=treeLeftLeafSum1(root->left, true);
+            sum+=treeLeftLeafSum1(root->right, false);
+
+            return sum;
+        }
+
+        int treeLeftLeafSum2(BTree *root, bool isLeft) {
+            
+            int sum = 0;
+            vector<struct QueueNode *> queue;
+            QueueNode *tmp = new QueueNode;
+            BTree *leftChild = NULL;
+            BTree *rightChild = NULL;
+
+            tmp->isLeft = isLeft;
+            tmp->root = root;
+            queue.push_back(tmp);
+
+            while(!queue.empty()) {
+                tmp = queue.front();
+                leftChild = tmp->root->left;
+                rightChild = tmp->root->right;
+                queue.erase(queue.begin());
+
+                if(tmp->isLeft) {
+                    if(tmp->root->left == NULL && tmp->root->right == NULL) {
+                        sum+=tmp->root->data;
+                    }
+                }
+
+                //if(tmp->root->left != NULL) {
+                if(leftChild != NULL) {
+                    tmp->isLeft = true;
+                    tmp->root = tmp->root->left;
+                    queue.push_back(tmp);
+                }
+                //if(tmp->root->right != NULL) {    Not Using Because root was getting modified in prev if statement
+                if(rightChild != NULL) {
+                    tmp->isLeft = false;
+                    tmp->root = tmp->root->right;
+                    queue.push_back(tmp);
+                }
+            }
+            return sum;
+         }
+};
+
 int main() {
     
+    TreeLeftLeafSum *obj = new TreeLeftLeafSum(); 
+
     cout << "Enter Size of Tree" << endl;
     cin >> size; // Part of Namespace bTreeUtil
 
     createOneChildTree();
+
+    //cout << "Sum of Left Leaf Nodes is : " << obj->treeLeftLeafSum1(bTreeUtil::root, false) << endl;
+    cout << "Sum of Left Leaf Nodes is : " << obj->treeLeftLeafSum2(bTreeUtil::root, false) << endl;
+
+    return 0;
 }
 
