@@ -33,8 +33,11 @@ class LeftMostNode {
             while(!queue.empty()) {
                 tmp = queue.front();
                 queue.erase(queue.begin());
-
-                if(tmp->left == NULL && tmp->right == NULL)
+/*
+                if(tmp->left == NULL && tmp->right == NULL) // Need to Think ( If Bottom Level has multiple Leaf Nodes
+                    return tmp->data;
+*/
+                if(tmp->left == NULL && tmp->right == NULL && queue.empty())
                     return tmp->data;
 
                 if(tmp->right != NULL)
