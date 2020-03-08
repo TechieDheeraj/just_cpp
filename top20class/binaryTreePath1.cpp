@@ -109,5 +109,8 @@ int main() {
     cout << "Longest Root to Leaf Path is " << obj->bTreeLongPath1(bTreeUtil::root) << endl;
     cout << "Longest Root to Leaf Path is " << obj->bTreeLongPath2(bTreeUtil::root) << endl;
 
+//    createRandomTree();
+//    displayTree(bTreeUtil::root);
+
     return 0;
 }
