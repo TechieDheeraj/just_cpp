@@ -23,6 +23,8 @@ class BTreeSerDe {
 /*
     Adhoc ->
         Preorder With Null Links
+
+        Using Stack ( recursive ) approach to traverse the tree and then using extra variable on Data Segment to Store result.
 */
 
         void BTreeSerialise1(BTree *root) {
@@ -33,7 +35,7 @@ class BTreeSerDe {
             serString.push_back(COMMA);
 
             if(root->left == NULL) {
-                serString.push_back(NULLCHAR);
+                serString.push_back(NULLCHAR); // Taking Extra Memory to Solve the Problem
                 serString.push_back(COMMA);
             }
             
@@ -45,6 +47,22 @@ class BTreeSerDe {
             }
 
             BTreeSerialise1(root->right);
+        }
+/*
+    Adhoc ->
+        Preorder With Null Links
+
+        Using direct recursive approach to solve the problem.
+*/
+        string BTreeSerialise2(BTree *root) {
+            string left = "";
+            string right = "";
+            if(root == NULL) return "#,";
+
+            left = BTreeSerialise2(root->left);
+            right = BTreeSerialise2(root->right);
+
+            return to_string(root->data) + "," + left + right; 
         }
 };
 
@@ -60,6 +78,8 @@ int main() {
     obj->BTreeSerialise1(bTreeUtil::root);
 
     cout << "Serialised String is " << obj->serString << endl;
+
+    cout << "Serialises String 2 is " << obj->BTreeSerialise2(bTreeUtil::root) << endl;
 
     return 0;
 }

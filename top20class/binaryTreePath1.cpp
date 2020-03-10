@@ -26,14 +26,16 @@ class BTreeLongPath {
         TC:O(n)
         SC:O(n)
 */
-// TODO: Tested on One Child Tree, Need to see if multiple nodes at same level. It will fail because tmp->root is getting modified again for right child
+// DONE WITH TODO: Tested on One Child Tree, Need to see if multiple nodes at same level. It will fail because tmp->root is getting modified again for right child
         int bTreeLongPath1(BTree *root) {
 
             int lpath = 0;
             vector <TQueue *> tqueue;
-            struct TQueue *tmp = new TQueue;
             struct TQueue *prev = NULL;
             struct BTree *LChild = NULL, *RChild = NULL;
+
+// Allocating Memory for node to push into the Queue
+            struct TQueue *tmp = new TQueue;
 
             tmp->level = 1;
             tmp->root = root;
@@ -41,37 +43,35 @@ class BTreeLongPath {
             tqueue.push_back(tmp);
 
             while(!tqueue.empty()) {
-                cout << " size of queue "<< tqueue.size() << endl;
                 prev = tqueue.front();
                 tqueue.erase(tqueue.begin());
-                cout << " root " << prev->root << " left " << prev->root->left << " right" << prev->root->right << endl;
 
                 lpath = prev->level;
-                cout << " lpath "<< lpath << endl;
                 LChild = prev->root->left;
                 RChild = prev->root->right;
 
-                if(prev->root->left == NULL && prev->root->right == NULL && tqueue.empty())
+                delete prev; // Once Node is Processed Can free the Memory
+                prev = nullptr; // Just not to make dangling pointer
+
+                if(LChild == NULL && RChild == NULL && tqueue.empty())
                     break;
 
                 if(LChild != NULL) {
-                    cout  << " pushed left of "<< prev->root << endl; 
+                    tmp = new TQueue;
                     tmp->level = lpath+1;
                     tmp->root = LChild;
                     tqueue.push_back(tmp);
                 }
                     
                 if(RChild != NULL) {
-                    cout  << " pushed right of "<< prev->root << endl; 
+                    tmp = new TQueue;
                     tmp->level = lpath+1;
                     tmp->root = RChild;
                     tqueue.push_back(tmp);
                 }
             }
-          
             return lpath; 
         }
-
 
 /*
     Using Stack (Recusrive approach to traverse the tree not USING Direct Recusrion to Solve Problem Just taking help of recursion and updating result in global variable instead of passing on stack) 
@@ -108,7 +108,6 @@ class BTreeLongPath {
             if(root == NULL) return 0;
 
             lpath = traverseTree2(root->left, level+1);
-
             lpath = ( lpath > level ) ? lpath : level;
             rpath = traverseTree2(root->right, level+1);
 
@@ -133,7 +132,7 @@ int main() {
     createRandomTree();
     displayTree(bTreeUtil::root);
 
-//    cout << "Longest Root to Leaf Path is " << obj->bTreeLongPath1(bTreeUtil::root) << endl;
+    cout << "Longest Root to Leaf Path is " << obj->bTreeLongPath1(bTreeUtil::root) << endl;
     cout << "Longest Root to Leaf Path is " << obj->bTreeLongPath2(bTreeUtil::root) << endl;
     cout << "Longest Root to Leaf Path is " << obj->bTreeLongPath3(bTreeUtil::root) << endl;
 
