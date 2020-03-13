@@ -47,6 +47,7 @@ class BTreeSerDe {
     public:
         //vector<char> serString;
         string serString;
+        int nodeCounter = 0;
 
 /*
 Adhoc ->
@@ -85,26 +86,46 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
             BTreeSerialise1(root->right);
         }
 
+        BTree *buildTree(vector <string> &data) {
+
+            if(data[nodeCounter] == "#")
+                return NULL;
+
+            root = createNode(stoi(data[nodeCounter]));
+
+            cout << " Node Addr: " << root << endl;
+
+            nodeCounter++;
+
+            root->left = buildTree(data);
+
+            nodeCounter++;
+
+            root->right = buildTree(data);
+
+            return root;
+        }
+
         BTree *BTreeDeSerialise1(string data)  {
             vector <string> pString;
+            int count = 0;
+            string substr;
+            BTree *root = NULL;
+
             //stringstream s_stream(data); // Creating String Stream Like it is reading from cin
             if(!data.empty()) // Removing Trailing Comma
                 data.erase(std::prev(data.end()));
 
             istringstream s_stream(data);
-            string substr;
 
-            string st;
             while(s_stream.good()) {
                 getline(s_stream, substr, COMMA);
                 pString.push_back(substr);
             }
 
-            for(auto i: pString)
-                cout << i;
-            cout << "\n" << "size " << pString.size() << endl;
+            root = buildTree(pString);
 
-            return NULL;
+            return root;
         }
 
 /*
@@ -204,7 +225,8 @@ int main() {
     De-Serialise Strings
 */
     BTree *node = obj->BTreeDeSerialise1(obj->serString);
-    //displayTree(node);
+    cout << " Addr : " << node << endl;
+    displayTree(node);
 
     return 0;
 }
