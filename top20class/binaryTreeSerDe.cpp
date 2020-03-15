@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<sstream>
+#include<queue>
 
 using namespace std;
 
@@ -42,6 +43,24 @@ class BTreeSerDe {
             result += findPreOrder(root->right);
 
             return result;
+        }
+
+        vector<string> tokenizeString(string data) {
+            vector<string> sstring; // = new vector<string>();
+            string substr;
+
+            istringstream s_stream(data);
+
+            if(!data.empty())
+                data.erase(std::prev(data.end()));
+
+            while(s_stream.good()) {
+
+                getline(s_stream, substr, COMMA);
+                sstring.push_back(substr);
+            }
+
+            return sstring;
         }
 
     public:
@@ -86,48 +105,40 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
             BTreeSerialise1(root->right);
         }
 
-        BTree *buildTree(vector <string> &data) {
+        BTree *buildTree(vector <string> data) {
+
+            BTree *node;
 
             if(data[nodeCounter] == "#")
                 return NULL;
 
-            root = createNode(stoi(data[nodeCounter]));
-
-            cout << " Node Addr: " << root << endl;
+            node = createNode(stoi(data[nodeCounter]));
 
             nodeCounter++;
 
-            root->left = buildTree(data);
+            node->left = buildTree(data);
 
             nodeCounter++;
 
-            root->right = buildTree(data);
+            node->right = buildTree(data);
 
-            return root;
+            return node;
         }
+/*
+    De-Serialise Pre Order Serialised String
+*/
 
         BTree *BTreeDeSerialise1(string data)  {
             vector <string> pString;
-            int count = 0;
             string substr;
             BTree *root = NULL;
 
-            //stringstream s_stream(data); // Creating String Stream Like it is reading from cin
-            if(!data.empty()) // Removing Trailing Comma
-                data.erase(std::prev(data.end()));
-
-            istringstream s_stream(data);
-
-            while(s_stream.good()) {
-                getline(s_stream, substr, COMMA);
-                pString.push_back(substr);
-            }
+            pString = tokenizeString(data);
 
             root = buildTree(pString);
 
             return root;
         }
-
 /*
     Adhoc ->
         Preorder With Null Links
@@ -182,6 +193,55 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
             }
             return result;
         }
+
+/*
+    De-Serialise Level Order Serialised string
+*/
+        BTree *BTreeDeSerialise3(string data) {
+           
+            BTree *node = NULL;
+            queue <BTree *> lqueue;
+            vector <string> pString;
+            nodeCounter = 0;
+
+            pString = tokenizeString(data);
+
+            lqueue.push(node);
+        
+            while(!lqueue.empty()) {
+                node = lqueue.front();
+                lqueue.pop();
+                
+                if(nodeCounter == 0) {
+                    root = createNode(stoi(pString[nodeCounter]));
+                    nodeCounter++;
+                    node = root;
+                }
+                
+                if(pString[nodeCounter] != "#"){
+
+                    node->left = createNode(stoi(pString[nodeCounter]));
+                    nodeCounter++;
+                    lqueue.push(node->left);
+                }
+                else {
+                    node->left = NULL;
+                    nodeCounter++;
+                }
+                
+                if(pString[nodeCounter] != "#"){
+                    node->right = createNode(stoi(pString[nodeCounter]));
+                    nodeCounter++;
+                    lqueue.push(node->right);
+                }
+                else {
+                    node->right = NULL;
+                    nodeCounter++;
+                }
+            }
+
+            return root; 
+        }
 /*
     Using PreOrder + InOrder Strings to Serialise
 */
@@ -201,6 +261,7 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
 int main() {
 
     BTreeSerDe *obj = new BTreeSerDe();
+    string fString;
 
     cout << "Enter Size of Tree " << endl;
     cin >> bTreeUtil::size;
@@ -213,20 +274,23 @@ int main() {
     Serialize Strings
 */
 
-    obj->BTreeSerialise1(bTreeUtil::root); // Storing in serString Global Object
-    cout << "PreOrder Serialise " << obj->serString << endl;
+//    obj->BTreeSerialise1(bTreeUtil::root); // Storing in serString Global Object
+//    cout << "PreOrder Serialise " << obj->serString << endl;
 
 //    cout << "PreOrder Serialise is " << obj->BTreeSerialise2(bTreeUtil::root) << endl;
-//    cout << "Level Order Serialise " << obj->BTreeSerialise3(bTreeUtil::root) << endl;
+    fString = obj->BTreeSerialise3(bTreeUtil::root);
+    cout << "Level Order Serialise " << fString << endl;
 
 //    cout << "Serialise String with In+Pre " << obj->BTreeSerialise4(bTreeUtil::root) << endl;
 
 /* 
     De-Serialise Strings
 */
-    BTree *node = obj->BTreeDeSerialise1(obj->serString);
-    cout << " Addr : " << node << endl;
+//    BTree *node = obj->BTreeDeSerialise1(obj->serString);
+
+    BTree *node = obj->BTreeDeSerialise3(fString); // Level Order DeSer
     displayTree(node);
+
 
     return 0;
 }
