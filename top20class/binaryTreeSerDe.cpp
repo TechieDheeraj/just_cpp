@@ -2,6 +2,7 @@
 #include<vector>
 #include<sstream>
 #include<queue>
+#include<algorithm>
 
 using namespace std;
 
@@ -256,6 +257,32 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
 
             return preOrder + NULLCHAR + COMMA + inOrder;
         }
+
+/*
+    De-Serialise in+pre Order Serialised string
+*/
+        BTree * BTreeDeSerialise4(string data) {
+            vector<string> pString;
+            int inIndex = 0;
+            int preIndex = 0;
+
+            pString = tokenizeString(data);
+            for(auto i : pString)
+                cout << i;
+            cout << "\n";
+            auto it = std::find(pString.begin(), pString.end(), "#");
+            preIndex = (it - pString.begin()) - 1;
+            inIndex = (it - pString.begin()) + 1;
+
+            cout << "preIndex range " << 0 << " : " << preIndex << endl;
+            cout << "inIndex range " << inIndex << " : " << pString.size()-2 << endl;
+            
+
+
+
+
+            return NULL;
+        }
 };
 
 int main() {
@@ -278,18 +305,19 @@ int main() {
 //    cout << "PreOrder Serialise " << obj->serString << endl;
 
 //    cout << "PreOrder Serialise is " << obj->BTreeSerialise2(bTreeUtil::root) << endl;
-    fString = obj->BTreeSerialise3(bTreeUtil::root);
-    cout << "Level Order Serialise " << fString << endl;
-
-//    cout << "Serialise String with In+Pre " << obj->BTreeSerialise4(bTreeUtil::root) << endl;
+//    fString = obj->BTreeSerialise3(bTreeUtil::root);
+//    cout << "Level Order Serialise " << fString << endl;
+    fString = obj->BTreeSerialise4(bTreeUtil::root);
+    cout << "Serialise String with In+Pre " << fString << endl;
 
 /* 
     De-Serialise Strings
 */
 //    BTree *node = obj->BTreeDeSerialise1(obj->serString);
 
-    BTree *node = obj->BTreeDeSerialise3(fString); // Level Order DeSer
-    displayTree(node);
+//    BTree *node = obj->BTreeDeSerialise3(fString); // Level Order DeSer
+    BTree *node = obj->BTreeDeSerialise4(fString); // Level Order DeSer
+//    displayTree(node);
 
 
     return 0;
