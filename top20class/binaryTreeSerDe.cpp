@@ -52,14 +52,21 @@ class BTreeSerDe {
 
             istringstream s_stream(data);
 
-            if(!data.empty())
-                data.erase(std::prev(data.end()));
+            if(data.back() == ',')
+                data.pop_back();
+
+            cout << "last data " << data.back() << endl;
+
+            if(data.front() == ',')
+                data.erase(data.begin());
+            cout << "front data " << data.front() << endl;
 
             while(s_stream.good()) {
 
                 getline(s_stream, substr, COMMA);
                 sstring.push_back(substr);
             }
+            cout << "size--- " << sstring.size() << endl;
 
             return sstring;
         }
@@ -265,22 +272,32 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
             vector<string> pString;
             int inIndex = 0;
             int preIndex = 0;
-
-            pString = tokenizeString(data);
-            for(auto i : pString)
-                cout << i;
-            cout << "\n";
-            auto it = std::find(pString.begin(), pString.end(), "#");
-            preIndex = (it - pString.begin()) - 1;
-            inIndex = (it - pString.begin()) + 1;
-
-            cout << "preIndex range " << 0 << " : " << preIndex << endl;
-            cout << "inIndex range " << inIndex << " : " << pString.size()-2 << endl;
             
+            string tmp;
+            vector<string> tokenStr;// = new vector<string>;
+            string inOrder, preOrder;
 
+            istringstream sstream(data);
 
+            while(getline(sstream, tmp, '#'))
+                tokenStr.push_back(tmp);
 
+            preOrder = tokenStr.at(0);
+            inOrder = tokenStr.at(1);
 
+            for(auto dk: inOrder)
+                cout << dk;
+            cout << " \n Yo" << endl;
+            //copy((*preOrder).begin(), (*preOrder).end(), preOrder);
+            //copy(tmp[1].begin(), tmp[1].end(), inOrder);
+
+            pString = tokenizeString(inOrder);
+            cout << " size of pString" << pString.size() << endl;
+            cout << "\n";
+            for (auto t: pString) 
+                cout << t;
+            cout << "\n";
+            
             return NULL;
         }
 };
