@@ -50,23 +50,19 @@ class BTreeSerDe {
             vector<string> sstring; // = new vector<string>();
             string substr;
 
-            istringstream s_stream(data);
-
             if(data.back() == ',')
                 data.pop_back();
 
-            cout << "last data " << data.back() << endl;
-
             if(data.front() == ',')
                 data.erase(data.begin());
-            cout << "front data " << data.front() << endl;
+
+            istringstream s_stream(data);
 
             while(s_stream.good()) {
 
                 getline(s_stream, substr, COMMA);
                 sstring.push_back(substr);
             }
-            cout << "size--- " << sstring.size() << endl;
 
             return sstring;
         }
@@ -268,10 +264,43 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
 /*
     De-Serialise in+pre Order Serialised string
 */
+        int findElementByIndex(vector<string> array, string elem, int l, int r) {
+
+            for(int i = l; l<=r; ++i) {
+                if(array[i] == elem) return i;
+            }
+            return -1;
+        }
+
+        BTree *auxDeSer4(vector<string> &preString, vector<string> &inString, int l, int r) {
+
+            string current;
+            int cIndex;
+            bool isRoot = false;
+            BTree *node;
+
+            if(l>r) return NULL;
+
+            if(preString.size() == inString.size())
+                isRoot = true;
+                
+            current = preString.front();
+            preString.erase(preString.begin());
+
+            node = createNode(stoi(current));
+            if(isRoot) root = node; // Just Setting First node to Root defined in bTreeUtil
+
+            cIndex = findElementByIndex(inString, current, l, r);
+
+            node->left = auxDeSer4(preString, inString, l, cIndex-1);
+            node->right = auxDeSer4(preString, inString, cIndex+1, r);
+
+            return node;
+        }
+
         BTree * BTreeDeSerialise4(string data) {
-            vector<string> pString;
-            int inIndex = 0;
-            int preIndex = 0;
+            vector<string> preString;
+            vector<string> inString;
             
             string tmp;
             vector<string> tokenStr;// = new vector<string>;
@@ -285,20 +314,13 @@ Using Stack ( recursive ) approach to traverse the tree and then using extra var
             preOrder = tokenStr.at(0);
             inOrder = tokenStr.at(1);
 
-            for(auto dk: inOrder)
-                cout << dk;
-            cout << " \n Yo" << endl;
             //copy((*preOrder).begin(), (*preOrder).end(), preOrder);
             //copy(tmp[1].begin(), tmp[1].end(), inOrder);
 
-            pString = tokenizeString(inOrder);
-            cout << " size of pString" << pString.size() << endl;
-            cout << "\n";
-            for (auto t: pString) 
-                cout << t;
-            cout << "\n";
-            
-            return NULL;
+            preString = tokenizeString(preOrder);
+            inString = tokenizeString(inOrder);
+
+            return auxDeSer4(preString, inString, 0, inString.size()-1);
         }
 };
 
@@ -334,7 +356,7 @@ int main() {
 
 //    BTree *node = obj->BTreeDeSerialise3(fString); // Level Order DeSer
     BTree *node = obj->BTreeDeSerialise4(fString); // Level Order DeSer
-//    displayTree(node);
+    displayTree(node);
 
 
     return 0;
