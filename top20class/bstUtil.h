@@ -3,12 +3,12 @@
 namespace bSTUtil {
 
     struct BSTree {
-        int data;
+        unsigned int data;
         struct BSTree *left;
         struct BSTree *right;
     };
 
-    int size;
+    unsigned int size;
 
     struct BSTree *createNode(int data) {
         struct BSTree *node = NULL;
@@ -22,14 +22,11 @@ namespace bSTUtil {
         return node;
     }
 
-    BSTree *insertNode(BSTree *root, int data) {
-        struct timeval cur_time;
+    BSTree *insertNode(BSTree *root, unsigned int data) {
         BSTree *current = NULL;
 
-        gettimeofday(&cur_time, NULL);
-        srand(cur_time.tv_sec);
-
-        data = ((rand() / (data+1 * 3 * data+1)) % 100);
+        //data = (rand() % 100) +1; // / (((data+1) * 3 * (data+1)) % 100));
+        data = ((rand() / ((data+1) * 3 * (data+1))) % size) + (size/3);
 
         if(root == NULL) {
             root = createNode(data);
@@ -38,6 +35,7 @@ namespace bSTUtil {
         
         current = root;
         while(current != NULL) {
+            if(data <= 0) exit(0);
             if(data < current->data) {
                 if(current->left == NULL) {
                     current->left = createNode(data);
@@ -49,6 +47,10 @@ namespace bSTUtil {
                 if(current->right == NULL) {
                     current->right = createNode(data+current->data);
                     break;
+                }
+                else {
+                    data-=2;  // TODO: To make less duplicates, Shall Reconsider
+                    continue;
                 }
             }
             else {
@@ -63,10 +65,14 @@ namespace bSTUtil {
     }
 
     struct BSTree *createRandomBST() {
+        struct timeval cur_time;
+
+        gettimeofday(&cur_time, NULL);
+        srand(cur_time.tv_sec);
 
         BSTree *root = NULL;
 
-        for(int i = 0; i < size; ++i) {
+        for(unsigned int i = 0; i < size; ++i) {
             root = insertNode(root, i+i);
         }
 
